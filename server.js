@@ -14,7 +14,7 @@ const db = mysql.createConnection(
 );
 
 const seeDepartments = () => {
-    db.query('SELECT * FROM departments', (err,data) => {
+    db.query('SELECT * FROM departments', (err, data) => {
         if (err) {
             console.log(err);
             db.end;
@@ -26,8 +26,8 @@ const seeDepartments = () => {
 };
 
 
-const seeRoles= () => {
-    db.query('SELECT * FROM roles', (err,data) => {
+const seeRoles = () => {
+    db.query('SELECT * FROM roles', (err, data) => {
         if (err) {
             console.log(err);
             db.end;
@@ -38,8 +38,8 @@ const seeRoles= () => {
     })
 };
 
-const seeEmployees= () => {
-    db.query('SELECT * FROM employees', (err,data) => {
+const seeEmployees = () => {
+    db.query('SELECT * FROM employees', (err, data) => {
         if (err) {
             console.log(err);
             db.end;
@@ -50,6 +50,26 @@ const seeEmployees= () => {
     })
 };
 
+const addDeparment = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the name of the department?",
+            name: "departmentName"
+        }
+    ]).then(answers => {
+        db.query(
+            `INSERT INTO departments(name) VALUES(?)`, answers.departmentName, (err, data) =>{
+            if (err){
+                console.log(err);
+                db.end();
+            } else {
+                console.log("department added!");
+                seeDepartments();
+            }
+        })
+    })
+}
 
 const main = () => {
     inquirer.prompt({
@@ -88,4 +108,4 @@ const main = () => {
     });
 };
 
-main(); 
+main();
