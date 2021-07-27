@@ -71,6 +71,32 @@ const addDeparment = () => {
     })
 }
 
+const addRole = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the name of the role?",
+            name: "title"
+        },
+        {
+            type:"input",
+            message:"What is the salary of the role?",
+            name: "salary"
+        },
+    ]).then(answers => {
+        db.query(
+            `INSERT INTO roles(title,salary) VALUES(?,?)`, [answers.title, answers.salary], (err, data) =>{
+            if (err){
+                console.log(err);
+                db.end();
+            } else {
+                console.log("role added!");
+                seeRoles();
+            }
+        })
+    })
+}
+
 const main = () => {
     inquirer.prompt({
         type: "list",
