@@ -7,18 +7,18 @@ VALUES
 ("Engineering"),
 ("Legal");
 
-INSERT INTO roles(title,department,salary)
+INSERT INTO roles(title,department_id,salary)
 VALUES
-("Sales Lead","Sales", 100000).
-("Salesperson", "Sales", 90000),
-("Lead Engineer", "Engineering", 150000),
-("Software Engineer", "Engineer", 120000),
-("Account Manager", "Finance", 160000),
-("Accountant", "Finance", 125000),
-("Legal Team Lead", "Legal", 250000),
-("Lawyer", "Legal", 190000);
+("Sales Lead","1", 100000),
+("Salesperson","1", 90000),
+("Lead Engineer","3", 150000),
+("Software Engineer","3", 120000),
+("Account Manager","2", 160000),
+("Accountant","2", 125000),
+("Legal Team Lead","4", 250000),
+("Lawyer", "4", 190000);
 
-INSERT INTO employees (first_name,last_name,manager_id)
+INSERT INTO employees (first_name,last_name)
 VALUES
 ("John", "Doe"),
 ("Mike", "Chan"),
@@ -27,6 +27,6 @@ VALUES
 ("Kunal", "Singh"),
 ("Malia", "Brown"),
 ("Sarah", "Lourd"),
-("Tom", "Allen"),
+("Tom", "Allen");
 
 
