@@ -13,11 +13,48 @@ const db = mysql.createConnection(
     console.log(`Connected to the company_db database.`)
 );
 
+const seeDepartments = () => {
+    db.query('SELECT * FROM departments', (err,data) => {
+        if (err) {
+            console.log(err);
+            db.end;
+        } else {
+            console.table(data);
+            main();
+        }
+    })
+};
+
+
+const seeRoles= () => {
+    db.query('SELECT * FROM roles', (err,data) => {
+        if (err) {
+            console.log(err);
+            db.end;
+        } else {
+            console.table(data);
+            main();
+        }
+    })
+};
+
+const seeEmployees= () => {
+    db.query('SELECT * FROM employees', (err,data) => {
+        if (err) {
+            console.log(err);
+            db.end;
+        } else {
+            console.table(data);
+            main();
+        }
+    })
+};
+
 
 const main = () => {
     inquirer.prompt({
         type: "list",
-        choices: ["View All Departments", " View All Roles", "View All Employees", "Add A Department", "Add A Role", "Add An Employee", "Update Employee Role", "QUIT"],
+        choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Department", "Add A Role", "Add An Employee", "Update Employee Role", "QUIT"],
         message: "What do you want to do?",
         name: "choice"
     }).then(({ choice }) => {
@@ -29,7 +66,7 @@ const main = () => {
                 seeRoles();
                 break;
             case "View All Employees":
-                seeEmployee();
+                seeEmployees();
                 break;
             case "Add A Department":
                 addDeparment();
