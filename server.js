@@ -97,6 +97,38 @@ const addRole = () => {
     })
 }
 
+const addEmployee = () => {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the first name of the employee?",
+            name: "first"
+        },
+        {
+            type:"input",
+            message:"What is the last name of the employee?",
+            name: "last"
+        },
+        {
+            type:"list",
+            message:"What is the employees role?",
+            choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawer"],
+            name: "role"
+        },
+    ]).then(answers => {
+        db.query(
+            `INSERT INTO employees (first_name,last_name) VALUES(?,?)`, [answers.first, answers.last], (err, data) =>{
+            if (err){
+                console.log(err);
+                db.end();
+            } else {
+                console.log("Employee added!");
+                seeEmployees();
+            }
+        })
+    })
+}
+
 const main = () => {
     inquirer.prompt({
         type: "list",
