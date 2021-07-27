@@ -59,15 +59,15 @@ const addDeparment = () => {
         }
     ]).then(answers => {
         db.query(
-            `INSERT INTO departments(name) VALUES(?)`, answers.departmentName, (err, data) =>{
-            if (err){
-                console.log(err);
-                db.end();
-            } else {
-                console.log("department added!");
-                seeDepartments();
-            }
-        })
+            `INSERT INTO departments(name) VALUES(?)`, answers.departmentName, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    db.end();
+                } else {
+                    console.log("department added!");
+                    seeDepartments();
+                }
+            })
     })
 }
 
@@ -79,21 +79,21 @@ const addRole = () => {
             name: "title"
         },
         {
-            type:"input",
-            message:"What is the salary of the role?",
+            type: "input",
+            message: "What is the salary of the role?",
             name: "salary"
         },
     ]).then(answers => {
         db.query(
-            `INSERT INTO roles(title,salary) VALUES(?,?)`, [answers.title, answers.salary], (err, data) =>{
-            if (err){
-                console.log(err);
-                db.end();
-            } else {
-                console.log("role added!");
-                seeRoles();
-            }
-        })
+            `INSERT INTO roles(title,salary) VALUES(?,?)`, [answers.title, answers.salary], (err, data) => {
+                if (err) {
+                    console.log(err);
+                    db.end();
+                } else {
+                    console.log("role added!");
+                    seeRoles();
+                }
+            })
     })
 }
 
@@ -105,27 +105,50 @@ const addEmployee = () => {
             name: "first"
         },
         {
-            type:"input",
-            message:"What is the last name of the employee?",
+            type: "input",
+            message: "What is the last name of the employee?",
             name: "last"
         },
         {
-            type:"list",
-            message:"What is the employees role?",
+            type: "list",
+            message: "What is the employees role?",
             choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawer"],
             name: "role"
         },
     ]).then(answers => {
         db.query(
-            `INSERT INTO employees (first_name,last_name) VALUES(?,?)`, [answers.first, answers.last], (err, data) =>{
-            if (err){
-                console.log(err);
-                db.end();
-            } else {
-                console.log("Employee added!");
-                seeEmployees();
+            `INSERT INTO employees (first_name,last_name) VALUES(?,?)`, [answers.first, answers.last], (err, data) => {
+                if (err) {
+                    console.log(err);
+                    db.end();
+                } else {
+                    console.log("Employee added!");
+                    seeEmployees();
+                }
+            })
+    })
+}
+
+const updateRole = () => {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Which employee's role do you want to update?",
+            choices: [],
+            name: "name"
+        }
+    ]).then(answers => {
+        db.query(
+            `UPDATE employee SET role_id WHERE name = ?`, answers.name, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    db.end();
+                } else {
+                    console.log("Employee updated!");
+                    seeEmployees();
+                }
             }
-        })
+        )
     })
 }
 
