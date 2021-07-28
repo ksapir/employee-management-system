@@ -28,19 +28,20 @@ const seeDepartments = () => {
 
 
 const seeRoles = () => {
-    db.query('SELECT * FROM roles', (err, data) => {
-        if (err) {
-            console.log(err);
-            db.end;
-        } else {
-            console.table(data);
-            main();
-        }
-    })
+    db.query('SELECT * FROM roles JOIN departments WHERE roles.department_id = departments.id',
+        (err, data) => {
+            if (err) {
+                console.log(err);
+                db.end;
+            } else {
+                console.table(data);
+                main();
+            }
+        })
 };
 
 const seeEmployees = () => {
-    db.query('SELECT * FROM employees', (err, data) => {
+    db.query('SELECT employees.id, employees.first_name, employees.last_name, departments.name AS department, roles.title, roles.salary, employees.manager_id FROM departments INNER JOIN roles ON roles.department_id = departments.id INNER JOIN employees ON employees.role_id = roles.id', (err, data) => {
         if (err) {
             console.log(err);
             db.end;
@@ -99,11 +100,11 @@ const addRole = () => {
                     type: "list",
                     message: "What department does the role belong to?",
                     choices: depsArr,
-                    name:"department"
+                    name: "department"
                 },
             ]).then(answers => {
                 db.query(
-                    `INSERT INTO roles(title,salary) VALUES(?,?)`, [answers.title, answers.salary], (err, data) => {
+                    `INSERT INTO roles(title,salary,department_id) VALUES(?,?,?)`, [answers.title, answers.salary, answers.department], (err, data) => {
                         if (err) {
                             console.log(err);
                             db.end();
@@ -116,18 +117,29 @@ const addRole = () => {
             })
         }
     })
- }
+}
 
-        const addEmployee = () => {
-            db.query('SELECT * FROM roles', (err, data) => {
+const addEmployee = () => {
+    db.query('SELECT * FROM roles', (err, data) => {
+        if (err) {
+            console.log(err);
+            db.end();
+        } else {
+            const rolesArr = data.map(role => {
+                return {
+                    name: role.title,
+                    value: role.id
+                }
+            })
+            db.query('SELECT * FROM employees', (err, data) => {
                 if (err) {
                     console.log(err);
                     db.end();
                 } else {
-                    const rolesArr = data.map(role => {
+                    const empsArr = data.map(emp => {
                         return {
-                            name: role.title,
-                            value: role.id
+                            name: emp.first_name + ' ' + emp.last_name,
+                            value: emp.id
                         }
                     })
                     inquirer.prompt([
@@ -147,6 +159,12 @@ const addRole = () => {
                             choices: rolesArr,
                             name: "role"
                         },
+                        {
+                            type: "list",
+                            message: "Who is the employee's manager?",
+                            choices: empsArr,
+                            name: "manager"
+                }
                     ]).then(answers => {
                         db.query(
                             `INSERT INTO employees (first_name,last_name) VALUES(?,?)`, [answers.first, answers.last], (err, data) => {
@@ -162,44 +180,63 @@ const addRole = () => {
                 }
             });
         }
+    })
+}
 
         const updateRole = () => {
-            db.query('SELECT * FROM roles', (err, data) => {
+            db.query('SELECT * FROM employees', (err, data) => {
                 if (err) {
                     console.log(err);
                     db.end();
                 } else {
-                    const rolesArr = data.map(role => {
+                    const empsArr = data.map(emp => {
                         return {
-                            name: CONCAT(role.title),
-                            value: role.id
+                            name: emp.first_name + ' ' + emp.last_name,
+                            value: emp.id
                         }
                     })
-                    inquirer.prompt([
-                        {
-                            type: "list",
-                            message: "Which employee's role do you want to update?",
-                            choices: rolesArr,
-                            name: "name"
-                        }
-                    ]).then(answers => {
-                        db.query(
-                            `UPDATE employee SET role_id WHERE name = ?`, answers.name, (err, data) => {
-                                if (err) {
-                                    console.log(err);
-                                    db.end();
-                                } else {
-                                    console.log("Employee updated!");
-                                    seeEmployees();
+                    db.query('SELECT * FROM roles', (err, data) => {
+                        if (err) {
+                            console.log(err);
+                            db.end();
+                        } else {
+                            const rolesArr = data.map(role => {
+                                return {
+                                    name: role.title,
+                                    value: role.id
                                 }
-                            }
-                        )
+                            })
+                            inquirer.prompt([
+                                {
+                                    type: "list",
+                                    message: "Which employee's role do you want to update?",
+                                    choices: empsArr,
+                                    name: "name"
+                                },
+                                {
+                                    type: "list",
+                                    message: "Which role do you want to assign the selected employee?",
+                                    choices: rolesArr,
+                                    name: "newRole"
+                                }
+                            ]).then(answers => {
+                                db.query(
+                                    `UPDATE employees SET title =? WHERE first_name =?`, [answers.newRole, answers.name], (err, data) => {
+                                        if (err) {
+                                            console.log(err);
+                                            db.end();
+                                        } else {
+                                            console.log("Employee updated!");
+                                            seeEmployees();
+                                        }
+                                    }
+                                )
+                            })
+                        }
                     })
                 }
             })
         }
-
-
         const main = () => {
             inquirer.prompt({
                 type: "list",
