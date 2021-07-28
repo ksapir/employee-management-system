@@ -6,9 +6,6 @@
 ## Table of Contents:
 - [Installation](#installation)
 - [Usage](#usage)
-- [Visual Sample](#visual)
-- [License](#license)
-- [Test](#test)
 - [Contributors](#contributors)
 - [Github](#github)
 - [Email](#email)
@@ -19,6 +16,7 @@
 ## Usage:
 - Start the application by running node server.js
 - Or watch the walkthrough video here:
+https://drive.google.com/file/d/1A9miEzniPK0KVad48tmdqHvgvlhS1-23/view
 
 ## Contributors:
 - Karen Pion
