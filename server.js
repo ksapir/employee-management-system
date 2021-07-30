@@ -221,7 +221,7 @@ const addEmployee = () => {
                                 }
                             ]).then(answers => {
                                 db.query(
-                                    `UPDATE employees SET title =? WHERE first_name =?`, [answers.newRole, answers.name], (err, data) => {
+                                    `UPDATE roles, employees JOIN roles ON roles.id = employees.role_id SET title =? WHERE first_name =?`, [answers.newRole, answers.name], (err, data) => {
                                         if (err) {
                                             console.log(err);
                                             db.end();
